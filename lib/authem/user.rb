@@ -7,11 +7,9 @@ module Authem::User
 
     has_secure_password
 
-    alias_method :original_authenticate, :authenticate
-
     def authenticate(password)
       if password.present?
-        original_authenticate(password)
+        super(password)
       else
         false
       end
