@@ -19,7 +19,6 @@ class TestMigration < ActiveRecord::Migration
       t.column :email, :string
       t.column :crypted_password, :string
       t.column :salt, :string
-      t.column :remember_token, :string
       t.column :reset_password_token, :string
       t.column :session_token, :string
     end
@@ -27,7 +26,6 @@ class TestMigration < ActiveRecord::Migration
     create_table :primary_strategy_users, :force => true do |t|
       t.column :email, :string
       t.column :password_digest, :string
-      t.column :remember_token, :string
       t.column :reset_password_token, :string
       t.column :session_token, :string
     end

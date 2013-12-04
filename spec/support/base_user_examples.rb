@@ -52,22 +52,6 @@ shared_examples 'base user' do
     end
   end
 
-  describe '#remember_token' do
-    subject { user.remember_token }
-
-    it 'starts off blank' do
-      user[:remember_token].should be_nil
-    end
-
-    it 'generates a token when requested' do
-      subject.length.should == 40
-    end
-
-    it 'does not regenerate when requested again' do
-      subject.should == user.remember_token
-    end
-  end
-
   describe '#reset_password' do
     subject { user.reset_password(password, confirmation) }
     let(:confirmation) { password }

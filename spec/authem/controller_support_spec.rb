@@ -15,26 +15,15 @@ describe Authem::ControllerSupport do
   end
 
   describe '#sign_in' do
-    context 'with remember me on' do
-      before { controller.send(:sign_in, user) }
-      its(:current_user) { should == user }
-      it { session[:session_token].should == user.session_token }
-      it { cookies[:remember_token].should == user.remember_token }
-    end
-
-    context 'with remember me off' do
-      before { controller.send(:sign_in, user, false) }
-      its(:current_user) { should == user }
-      it { session[:session_token].should == user.session_token }
-      it { cookies[:remember_token].should be_nil }
-    end
+    before { controller.send(:sign_in, user) }
+    its(:current_user) { should == user }
+    it { session[:session_token].should == user.session_token }
   end
 
   describe '#sign_out' do
     before { controller.instance_variable_set(:@current_user, double) }
 
     it 'resets the session' do
-      cookies.should_receive(:[]=).with(:remember_token, nil)
       session.should_receive(:[]=).with(:session_token, nil)
       controller.should_receive(:reset_session)
       controller.send(:current_user).should_receive(:reset_session_token!)
@@ -53,25 +42,6 @@ describe Authem::ControllerSupport do
     context 'with a token in the session' do
       before { session[:session_token] = user.session_token }
       it { should == user }
-    end
-
-    context 'without a remember me token' do
-      before { cookies[:remember_token] = "" }
-      it { should be_nil }
-    end
-
-    context 'with a remember me token' do
-      before { cookies[:remember_token] = user.remember_token }
-      it { should == user }
-      it 'sets the session token' do
-        subject
-        session[:session_token].should == user.reload.session_token
-      end
-    end
-
-    context 'with an invalid remember me token' do
-      before { cookies[:remember_token] = 945 }
-      it { should be_nil }
     end
   end
 

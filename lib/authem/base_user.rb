@@ -12,10 +12,6 @@ module Authem::BaseUser
     end
   end
 
-  def remember_token
-    self[:remember_token] || generate_token(:remember)
-  end
-
   def session_token
     self[:session_token] || generate_token(:session)
   end

@@ -3,13 +3,11 @@ module Authem::ControllerSupport
 
   protected
 
-  def sign_in(user, remember_me=true)
-    cookies.permanent.signed[:remember_token] = user.remember_token if remember_me
+  def sign_in(user)
     session[:session_token] = user.session_token
   end
 
   def sign_out
-    cookies[:remember_token] = nil
     session[:session_token] = nil
     reset_session
     current_user.reset_session_token! if current_user
@@ -19,10 +17,6 @@ module Authem::ControllerSupport
   def current_user
     @current_user ||= if session[:session_token]
       Authem::Config.user_class.where(session_token: session[:session_token].to_s).first
-    elsif cookies[:remember_token].present?
-      Authem::Config.user_class.where(remember_token: cookies.signed[:remember_token].to_s).first.tap do |user|
-        session[:session_token] = user.session_token if user
-      end
     end
   end
 
