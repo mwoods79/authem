@@ -16,24 +16,31 @@ ActiveRecord::Base.establish_connection(dbconfig)
 class TestMigration < ActiveRecord::Migration
   def self.up
     create_table :sorcery_strategy_users, :force => true do |t|
-      t.column :email, :string
-      t.column :crypted_password, :string
-      t.column :salt, :string
-      t.column :reset_password_token, :string
-      t.column :session_token, :string
+      t.string :email, :string
+      t.string :crypted_password
+      t.string :salt
+      t.string :reset_password_token
     end
 
     create_table :primary_strategy_users, :force => true do |t|
-      t.column :email, :string
-      t.column :password_digest, :string
-      t.column :reset_password_token, :string
-      t.column :session_token, :string
+      t.string :email
+      t.string :password_digest
+      t.string :reset_password_token
+    end
+
+    create_table :authem_sessions, :force => true do |t|
+      t.string  :token
+      t.string  :revoked_at
+      t.string  :authemable_type
+      t.integer :authemable_id
+      t.timestamps
     end
   end
 
   def self.down
     drop_table :sorcery_strategy_users
     drop_table :primary_strategy_users
+    drop_table :authem_sessions
   end
 end
 

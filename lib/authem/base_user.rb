@@ -2,6 +2,8 @@ module Authem::BaseUser
   extend ::ActiveSupport::Concern
 
   included do
+    has_many :sessions, as: :authemable, class_name: "Authem::Session"
+
     validates_uniqueness_of :email
     validates_format_of :email, with: /\A\S+@\S+\z/
   end
@@ -10,10 +12,6 @@ module Authem::BaseUser
     def find_by_email(email)
       find_by("lower(email) = ?", email.downcase)
     end
-  end
-
-  def session_token
-    self[:session_token] || generate_token(:session)
   end
 
   def reset_password(password, confirmation)
@@ -38,10 +36,6 @@ module Authem::BaseUser
 
   def reset_password_token!
     generate_token(:reset_password)
-  end
-
-  def reset_session_token!
-    generate_token(:session)
   end
 
   private

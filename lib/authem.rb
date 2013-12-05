@@ -2,6 +2,7 @@ module Authem
   autoload :BaseUser,    'authem/base_user'
   autoload :User,        'authem/user'
   autoload :SorceryUser, 'authem/sorcery_user'
+  autoload :Session,     'authem/session'
 
   autoload :Config, 'authem/config'
   autoload :ControllerSupport, 'authem/controller_support'

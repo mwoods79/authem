@@ -4,19 +4,18 @@ module Authem::ControllerSupport
   protected
 
   def sign_in(user)
-    session[:session_token] = user.session_token
+    session[:session_token] = user.sessions.create!.token
   end
 
   def sign_out
-    session[:session_token] = nil
-    reset_session
-    current_user.reset_session_token! if current_user
+    Authem::Session.authenticate(session[:session_token]).try(:revoke!) if session[:session_token]
+    session.delete(:session_token)
     @current_user = nil
   end
 
   def current_user
     @current_user ||= if session[:session_token]
-      Authem::Config.user_class.where(session_token: session[:session_token].to_s).first
+      Authem::Session.authenticate(session[:session_token]).try(:authemable)
     end
   end
 

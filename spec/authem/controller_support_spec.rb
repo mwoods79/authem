@@ -17,16 +17,14 @@ describe Authem::ControllerSupport do
   describe '#sign_in' do
     before { controller.send(:sign_in, user) }
     its(:current_user) { should == user }
-    it { session[:session_token].should == user.session_token }
+    it { session[:session_token].should_not be_nil  }
   end
 
   describe '#sign_out' do
     before { controller.instance_variable_set(:@current_user, double) }
 
     it 'resets the session' do
-      session.should_receive(:[]=).with(:session_token, nil)
-      controller.should_receive(:reset_session)
-      controller.send(:current_user).should_receive(:reset_session_token!)
+      session.should_receive(:delete).with(:session_token)
       controller.send(:sign_out)
       controller.send(:current_user).should be_nil
     end
@@ -40,7 +38,7 @@ describe Authem::ControllerSupport do
     end
 
     context 'with a token in the session' do
-      before { session[:session_token] = user.session_token }
+      before { session[:session_token] = user.sessions.create!.token }
       it { should == user }
     end
   end
